@@ -91,6 +91,30 @@ services:
     networks:
       - marketplace-net
     restart: unless-stopped
+  catalog:
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: catalog_db
+      DB_USER: market_user
+      DB_PASSWORD: market_pass
+      EUREKA_HOST: eureka
+      EUREKA_PORT: 8761
+      DDL_AUTO: update
+      STEAM_API_KEY: "твой-ключ-из-steam-dev-apikey"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka:
+        condition: service_started
+    build:
+      context: ../marketplace-catalog
+    container_name: marketplace-catalog
+    ports:
+      - "8083:8083"
+    networks:
+      - marketplace-net
+    restart: unless-stopped
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.0
     container_name: marketplace-zookeeper
@@ -100,7 +124,26 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     networks:
       - marketplace-net
-
+  order:
+    build:
+      context: ../marketplace-order
+      dockerfile: Dockerfile
+    container_name: marketplace-order
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: order_db
+      DB_USER: market_user
+      DB_PASSWORD: market_pass
+      EUREKA_HOST: eureka
+      EUREKA_PORT: 8761
+    ports:
+      - "8084:8084"
+    depends_on:
+      - mysql
+      - eureka
+    networks:
+      - marketplace-net
   kafka:
     image: confluentinc/cp-kafka:7.6.0
     container_name: marketplace-kafka

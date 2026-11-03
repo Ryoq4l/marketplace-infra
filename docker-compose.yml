@@ -115,6 +115,20 @@ services:
     networks:
       - marketplace-net
     restart: unless-stopped
+  gateway:
+    build:
+      context: ../marketplace-gateway
+      dockerfile: Dockerfile
+    container_name: marketplace-gateway
+    environment:
+      EUREKA_HOST: eureka
+      EUREKA_PORT: 8761
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka
+    networks:
+      - marketplace-net
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.0
     container_name: marketplace-zookeeper

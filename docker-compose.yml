@@ -31,15 +31,16 @@ services:
     restart: unless-stopped
   auth:
     environment:
-        DB_HOST: mysql
-        DB_PORT: 3306
-        DB_NAME: auth_db
-        DB_USER: market_user
-        DB_PASSWORD: market_pass
-        EUREKA_HOST: eureka
-        EUREKA_PORT: 8761
-        JWT_SECRET: a9D2fG7hJ4kL1mN6pQ3rS8tU5vW0xY2z
-        DDL_AUTO: update
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: auth_db
+      DB_USER: market_user
+      DB_PASSWORD: market_pass
+      EUREKA_HOST: eureka
+      EUREKA_PORT: 8761
+      JWT_SECRET: a9D2fG7hJ4kL1mN6pQ3rS8tU5vW0xY2z
+      DDL_AUTO: update
     depends_on:
       mysql:
         condition: service_healthy
@@ -70,6 +71,7 @@ services:
     restart: unless-stopped
   wallet:
     environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: wallet_db
@@ -97,6 +99,7 @@ services:
     restart: unless-stopped
   catalog:
     environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: catalog_db
@@ -152,6 +155,7 @@ services:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
     container_name: marketplace-order
     environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: order_db

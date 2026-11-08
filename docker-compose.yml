@@ -31,7 +31,6 @@ services:
     restart: unless-stopped
   auth:
     environment:
-      GITHUB_TOKEN: ${GITHUB_TOKEN}
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: auth_db
@@ -47,9 +46,8 @@ services:
       eureka:
         condition: service_started
     build:
-      context: ../marketplace-auth
-      args:
-        GITHUB_TOKEN: ${GITHUB_TOKEN}
+      context: ..
+      dockerfile: marketplace-auth/Dockerfile
     container_name: marketplace-auth
     ports:
       - "8081:8081"
@@ -71,7 +69,6 @@ services:
     restart: unless-stopped
   wallet:
     environment:
-      GITHUB_TOKEN: ${GITHUB_TOKEN}
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: wallet_db
@@ -88,9 +85,8 @@ services:
       eureka:
         condition: service_started
     build:
-      context: ../marketplace-wallet
-      args:
-        GITHUB_TOKEN: ${GITHUB_TOKEN}
+      context: ..
+      dockerfile: marketplace-wallet/Dockerfile
     container_name: marketplace-wallet
     ports:
       - "6767:6767"
@@ -99,7 +95,6 @@ services:
     restart: unless-stopped
   catalog:
     environment:
-      GITHUB_TOKEN: ${GITHUB_TOKEN}
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: catalog_db
@@ -115,9 +110,8 @@ services:
       eureka:
         condition: service_started
     build:
-      context: ../marketplace-catalog
-      args:
-        GITHUB_TOKEN: ${GITHUB_TOKEN}
+      context: ..
+      dockerfile: marketplace-catalog/Dockerfile
     container_name: marketplace-catalog
     ports:
       - "8083:8083"
@@ -149,13 +143,10 @@ services:
       - marketplace-net
   order:
     build:
-      context: ../marketplace-order
-      dockerfile: Dockerfile
-      args:
-        GITHUB_TOKEN: ${GITHUB_TOKEN}
+      context: ..
+      dockerfile: marketplace-order/Dockerfile
     container_name: marketplace-order
     environment:
-      GITHUB_TOKEN: ${GITHUB_TOKEN}
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: order_db

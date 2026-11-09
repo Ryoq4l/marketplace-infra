@@ -62,7 +62,7 @@ services:
     environment:
       STEAM_API_KEY: "EB81C231FD4E68787E03F4964BCA80C1"
       BASE_URL: "http://localhost:19000"
-      ALLOWED_REDIRECT_URIS: "http://localhost:8081/login/oauth2/code/steam"
+      ALLOWED_REDIRECT_URIS: "http://localhost:8080/login/oauth2/code/steam,http://localhost:8080/callback?client_name=OidcClient"
       OIDC_CLIENT_SECRET: "5fdFDF0sd09dd99ssfs09FGS"
     networks:
       - marketplace-net
@@ -79,6 +79,7 @@ services:
       DDL_AUTO: update
       KAFKA_HOST: kafka
       KAFKA_PORT: 9092
+      JWT_SECRET: a9D2fG7hJ4kL1mN6pQ3rS8tU5vW0xY2z
     depends_on:
       mysql:
         condition: service_healthy

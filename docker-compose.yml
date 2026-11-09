@@ -104,6 +104,7 @@ services:
       EUREKA_HOST: eureka
       EUREKA_PORT: 8761
       DDL_AUTO: update
+      JWT_SECRET: a9D2fG7hJ4kL1mN6pQ3rS8tU5vW0xY2z
       STEAM_API_KEY: "твой-ключ-из-steam-dev-apikey"
     depends_on:
       mysql:
@@ -153,6 +154,7 @@ services:
       DB_NAME: order_db
       DB_USER: market_user
       DB_PASSWORD: market_pass
+      JWT_SECRET: a9D2fG7hJ4kL1mN6pQ3rS8tU5vW0xY2z
       EUREKA_HOST: eureka
       EUREKA_PORT: 8761
     ports:

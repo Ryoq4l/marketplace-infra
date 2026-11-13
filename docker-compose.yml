@@ -20,6 +20,7 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - marketplace-net
+
   eureka:
     build:
       context: ../marketplace-eureka
@@ -29,13 +30,16 @@ services:
     networks:
       - marketplace-net
     restart: unless-stopped
+
   auth:
     environment:
-      SPRING_PROFILES_ACTIVE: local
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: auth_db
       DB_USER: market_user
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      STEAM_CLIENT_SECRET: ${STEAM_CLIENT_SECRET}
       EUREKA_HOST: eureka
       EUREKA_PORT: 8761
       DDL_AUTO: update
@@ -53,6 +57,7 @@ services:
     networks:
       - marketplace-net
     restart: unless-stopped
+
   steam-auth-proxy:
     image: ghcr.io/niekcandaele/steam-auth-proxy:latest
     container_name: marketplace-steam-proxy
@@ -66,13 +71,15 @@ services:
     networks:
       - marketplace-net
     restart: unless-stopped
+
   wallet:
     environment:
-      SPRING_PROFILES_ACTIVE: local
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: wallet_db
       DB_USER: market_user
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
       EUREKA_HOST: eureka
       EUREKA_PORT: 8761
       DDL_AUTO: update
@@ -92,17 +99,19 @@ services:
     networks:
       - marketplace-net
     restart: unless-stopped
+
   catalog:
     environment:
-      SPRING_PROFILES_ACTIVE: local
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: catalog_db
       DB_USER: market_user
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      STEAM_API_KEY: ${STEAM_API_KEY}
       EUREKA_HOST: eureka
       EUREKA_PORT: 8761
       DDL_AUTO: update
-      STEAM_API_KEY: ${STEAM_API_KEY}
     depends_on:
       mysql:
         condition: service_healthy
@@ -117,13 +126,13 @@ services:
     networks:
       - marketplace-net
     restart: unless-stopped
+
   gateway:
     build:
       context: ../marketplace-gateway
       dockerfile: Dockerfile
     container_name: marketplace-gateway
     environment:
-      SPRING_PROFILES_ACTIVE: local
       EUREKA_HOST: eureka
       EUREKA_PORT: 8761
     ports:
@@ -132,17 +141,19 @@ services:
       - eureka
     networks:
       - marketplace-net
+
   order:
     build:
       context: ..
       dockerfile: marketplace-order/Dockerfile
     container_name: marketplace-order
     environment:
-      SPRING_PROFILES_ACTIVE: local
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: order_db
       DB_USER: market_user
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
       EUREKA_HOST: eureka
       EUREKA_PORT: 8761
     ports:
@@ -152,8 +163,10 @@ services:
       - eureka
     networks:
       - marketplace-net
+
 volumes:
   marketplace_mysql_data:
+
 networks:
   marketplace-net:
     driver: bridge

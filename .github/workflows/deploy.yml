@@ -1,0 +1,34 @@
+name: Deploy Infrastructure
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout infra repository
+        uses: actions/checkout@v4
+
+      - name: Checkout secrets repository
+        uses: actions/checkout@v4
+        with:
+          repository: Ryoq4l/marketplace-secrets
+          token: ${{ secrets.SECRETS_REPO_TOKEN }}
+          path: secrets-repo
+
+      - name: Create .env file from secrets
+        run: |
+          cp secrets-repo/secrets.env .env
+
+      - name: Verify .env is created (без вывода паролей!)
+        run: |
+          if [ -f .env ]; then
+            echo ".env file successfully created from secrets!"
+            cut -d '=' -f 1 .env
+          else
+            echo ".env file NOT found!"
+            exit 1
+          fi
